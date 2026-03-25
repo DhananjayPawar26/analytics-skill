@@ -1,0 +1,11 @@
+# Environment variables — never commit
+.env
+
+# Service account JSON key — never commit
+# If you expose this key, rotate it immediately in Google Cloud IAM
+*.json
+!package.json
+!package-lock.json
+
+# Node modules
+node_modules/

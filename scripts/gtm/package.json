@@ -1,0 +1,16 @@
+{
+  "name": "gtm-analytics-scripts",
+  "version": "1.0.0",
+  "description": "GTM bulk setup scripts for GA4, Meta Pixel, CleverTap, Clarity, Google Ads",
+  "type": "commonjs",
+  "scripts": {
+    "setup": "node setup.js",
+    "create-tags": "node create-tag.js",
+    "create-tags:dry": "DRY_RUN=true node create-tag.js",
+    "publish": "node publish.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "googleapis": "^171.0.0"
+  }
+}
