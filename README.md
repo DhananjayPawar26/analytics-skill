@@ -1,94 +1,78 @@
-# GTM Multi-Analytics Integration Skill
+# GTM Analytics Skill
 
-A reusable, phased skill for integrating GA4, Meta Pixel, CleverTap, Microsoft Clarity, and Google Ads into any web project via Google Tag Manager.
+A reusable skill for integrating GA4, Meta Pixel, CleverTap, Microsoft Clarity, and Google Ads into any web project via Google Tag Manager.
 
 **Architecture:** GTM is the single container. Website code pushes events to `window.dataLayer`. GTM tags forward those events to each analytics platform.
+
+---
+
+## Skills
+
+### `analytics`
+
+Full GTM analytics integration — covers everything from prerequisites to publishing across all 5 platforms.
+
+```bash
+npx skills add DhananjayPawar26/analytics-skill --skill analytics
+```
+
+Primary docs: [`skills/analytics/README.md`](skills/analytics/README.md)
+
+### `gtm-bulk-push`
+
+Set up and run the Node.js scripts that bulk-create GTM variables, triggers, and tags via the Google Cloud Tag Manager API.
+
+```bash
+npx skills add DhananjayPawar26/analytics-skill --skill gtm-bulk-push
+```
+
+Primary docs: [`skills/gtm-bulk-push/README.md`](skills/gtm-bulk-push/README.md)
+
+Install only the skill you need:
+
+```bash
+npx skills add DhananjayPawar26/analytics-skill --skill analytics
+npx skills add DhananjayPawar26/analytics-skill --skill gtm-bulk-push
+```
 
 ---
 
 ## Repo structure
 
 ```
-docs/gtm-skill/
-├── plan.md                          — Skill index + phase navigation (start here)
-├── prompt.md                        — AI assistant prompt (Claude, Gemini, Codex)
-├── cursor_rules.mdc                 — Condensed rules for Cursor users
-├── copilot_instructions.md          — Condensed rules for VS Code + Copilot users
-└── windsurf_rules.md                — Condensed rules for Windsurf users
-
-reference/
-├── 01-prerequisites.md              — IDs, Google Cloud, service account, naming conventions
-├── 02-events-planning.md            — Client Excel parsing, ambiguity flags, gtm_all_tags.md format
-├── 03-gtm-setup-manual.md           — GTM dashboard: DLVs, triggers, SDK loaders, event tags
-├── 03-gtm-setup-scripts.md          — Bulk script usage and how create-tag.js works
-├── 04-website-integration.md        — GTM snippet, pushEvent utility, event file structure
-├── 05-testing-debugging.md          — Testing flow, debug decision tree, console commands
-├── 06-publishing.md                 — Publish steps, UAT vs production strategy
-└── platforms/
-    ├── clevertap.md                 — SDK loader, regions, events, onUserLogin, debugger
-    ├── ga4.md                       — Tag types, parameter limits, PII policy, DebugView
-    ├── meta-pixel.md                — Base pixel, standard vs custom events, Pixel Helper
-    ├── clarity.md                   — SDK loader, custom tagging, smart events
-    └── google-ads.md                — Conversion tag, remarketing, conversion linker
+skills/
+├── analytics/
+│   ├── SKILL.md                      — entry point for the analytics skill
+│   ├── README.md                     — overview and phase-by-phase reference index
+│   └── reference/
+│       ├── 01-prerequisites.md       — IDs, Google Cloud, service account, naming conventions
+│       ├── 02-events-planning.md     — Client Excel parsing, ambiguity flags, gtm_all_tags.md format
+│       ├── 03-gtm-setup-manual.md    — GTM dashboard: DLVs, triggers, SDK loaders, event tags
+│       ├── 03-gtm-setup-scripts.md   — Bulk script usage and how create-tag.js works
+│       ├── 04-website-integration.md — GTM snippet, pushEvent utility, event file structure
+│       ├── 05-testing-debugging.md   — Testing flow, debug decision tree, console commands
+│       ├── 06-publishing.md          — Publish steps, UAT vs production strategy
+│       ├── clevertap.md              — SDK loader, regions, events, onUserLogin, debugger
+│       ├── ga4.md                    — Tag types, parameter limits, PII policy, DebugView
+│       ├── meta-pixel.md             — Base pixel, standard vs custom events, Pixel Helper
+│       ├── clarity.md                — SDK loader, custom tagging, smart events
+│       └── google-ads.md             — Conversion tag, remarketing, conversion linker
+└── gtm-bulk-push/
+    ├── README.md                     — bulk-push usage guide
+    └── SKILL.md                      — entry point for the bulk push script skill
 
 scripts/gtm/
 ├── package.json
 ├── .env.example
 ├── .gitignore
-├── create-tag.js                    — Bulk create GA4 tags from gtm_all_tags.md
-├── setup.js                         — Full setup: variables + triggers + GA4 + Meta tags
-├── publish.js                       — Create version and publish GTM container
-├── create-trigger.js                — Utility: create a single trigger
-├── create-variables.js              — Utility: create DLV variables
-└── gtm_all_tags.md                  — Input file: event definitions (fill this in per project)
+├── README.md                         — script-level setup and workflow
+├── create-tag.js                     — Bulk create DLVs, triggers, and GA4 tags from gtm_all_tags.md
+├── setup.js                          — Example setup: variables, triggers, GA4 tags, and Meta base pixel
+├── publish.js                        — Create version and publish GTM container
+├── create-trigger.js                 — Utility: create a single trigger
+├── create-variables.js               — Utility: create DLV variables
+└── gtm_all_tags.md                   — Input file: event definitions (fill this in per project)
 ```
-
----
-
-## Quick start
-
-### 1. Read the skill
-
-Start with `docs/gtm-skill/plan.md` — it links to the right reference file for your specific goal. You don't need to read everything.
-
-### 2. Set up scripts
-
-```bash
-cd scripts/gtm
-npm install
-cp .env.example .env
-# Fill in GTM_ACCOUNT_ID, GTM_CONTAINER_ID, GA4_MEASUREMENT_ID, SERVICE_ACCOUNT_KEY_PATH
-```
-
-### 3. Fill in the events
-
-Edit `scripts/gtm/gtm_all_tags.md` with your project's event definitions following the format in the file.
-
-### 4. Dry run first
-
-```bash
-DRY_RUN=true node create-tag.js
-```
-
-### 5. Apply and publish
-
-```bash
-node create-tag.js
-node publish.js
-```
-
----
-
-## IDE-specific rules
-
-| IDE                     | File to use                                                                                       |
-| ----------------------- | ------------------------------------------------------------------------------------------------- |
-| Cursor                  | Copy `docs/gtm-skill/cursor_rules.mdc` → `.cursor/rules/gtm-skill.mdc` in your project            |
-| VS Code + Copilot       | Copy `docs/gtm-skill/copilot_instructions.md` → `.github/copilot-instructions.md` in your project |
-| Windsurf                | Copy `docs/gtm-skill/windsurf_rules.md` → `.windsurfrules` in your project                        |
-| Claude / Gemini / Codex | Paste `docs/gtm-skill/prompt.md` at the start of your conversation                                |
-
-> **Rule:** never edit IDE rule files directly. Always update the source reference files, then sync the IDE files from them.
 
 ---
 

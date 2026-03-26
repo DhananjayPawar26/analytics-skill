@@ -36,13 +36,15 @@ SERVICE_ACCOUNT_KEY_PATH=./service-account.json
 
 Place your downloaded service account JSON file in this directory and name it `service-account.json`.
 
+`META_PIXEL_ID` is only needed if you plan to run `setup.js`.
+
 > ⚠️ Never commit `service-account.json` or `.env` — both are in `.gitignore`
 
 ---
 
 ## Scripts
 
-### `create-tag.js` — Bulk create GA4 tags from `gtm_all_tags.md`
+### `create-tag.js` — Bulk create DLV variables, triggers, and GA4 tags from `gtm_all_tags.md`
 
 The main script. Reads all event definitions from `gtm_all_tags.md`, then creates all missing DLV variables, triggers, and GA4 event tags in the correct dependency order. Skips items that already exist.
 
@@ -70,9 +72,9 @@ npm run create-tags
 
 ---
 
-### `setup.js` — Full single-event setup
+### `setup.js` — Example setup for a fixed event set
 
-Creates variables, triggers, GA4 tag, and Meta Pixel tags for a defined set of events in one shot. Good for quick single-event setup or as a reference for how the API works.
+Creates variables, triggers, GA4 tags for a small hard-coded event set, plus the Meta base pixel tag. Use it as a reference script or a quick bootstrap for those sample events.
 
 ```bash
 node setup.js
@@ -131,7 +133,7 @@ This is the input file for `create-tag.js`. Fill it in with your project's event
 - Property values use `{{DLV - key_name}}` format
 - Use `Apply to:` or `Duplicate for:` annotations to apply the same property shape to multiple events
 
-See the existing entries in the file for examples, and `docs/gtm-skill/plan.md` Phase 2 for the full events planning guide.
+See the existing entries in the file for examples, and [`../../skills/analytics/reference/02-events-planning.md`](../../skills/analytics/reference/02-events-planning.md) for the event-planning guide used by this repo.
 
 ---
 
@@ -175,7 +177,7 @@ Both can be overridden in `.env` if needed.
 
 **`No GTM workspace found`** — confirm your `GTM_ACCOUNT_ID` and `GTM_CONTAINER_ID` are correct. Find them in GTM → Admin → Container Settings.
 
-**`Error 403`** — the service account doesn't have permission. Go to GTM → Admin → User Management and confirm the service account email has at least Edit access.
+**`Error 403`** — the service account doesn't have permission. Go to GTM → Admin → User Management and confirm the service account email has Edit access for setup scripts and Publish access if you will run `publish.js`.
 
 **`Error 429`** — rate limit hit. The script will automatically wait and retry. If it keeps happening, increase `GTM_WRITE_DELAY_MS` in `.env`.
 
