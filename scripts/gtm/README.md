@@ -31,12 +31,16 @@ GTM_ACCOUNT_ID=your_account_id
 GTM_CONTAINER_ID=your_container_id
 GA4_MEASUREMENT_ID=G-XXXXXXXXXX
 META_PIXEL_ID=your_pixel_id
+GOOGLE_ADS_CONVERSION_ID=AW-XXXXXXXXX
+GOOGLE_ADS_CURRENCY=INR
+GOOGLE_ADS_CONVERSION_LABELS=ATB_PDP_Clicked:label_one,Wishlist_Clicked:label_two
 SERVICE_ACCOUNT_KEY_PATH=./service-account.json
 ```
 
 Place your downloaded service account JSON file in this directory and name it `service-account.json`.
 
-`META_PIXEL_ID` is only needed if you plan to run `setup.js`.
+`META_PIXEL_ID` is needed if you plan to run `setup.js` or `create-meta-tag.js`.
+`GOOGLE_ADS_*` values are only needed if you plan to run `setup-google-ads.js`.
 
 > ⚠️ Never commit `service-account.json` or `.env` — both are in `.gitignore`
 
@@ -72,6 +76,34 @@ npm run create-tags
 
 ---
 
+### `create-meta-tag.js` — Bulk create DLV variables, triggers, Meta base pixel, and Meta event tags from `gtm_all_tags.md`
+
+Reads the same event definitions from `gtm_all_tags.md`, creates any missing DLV variables and custom-event triggers, ensures the Meta base pixel exists, and creates one Meta custom event tag per event.
+
+```bash
+# Always dry run first — shows what will be created without writing
+DRY_RUN=true node create-meta-tag.js
+
+# Apply — creates the base pixel tag plus Meta event tags
+node create-meta-tag.js
+
+# Using npm scripts
+npm run create-tags:meta:dry
+npm run create-tags:meta
+```
+
+**What it does:**
+
+- Parses all `clevertap.event.push("EventName", {...})` blocks from `gtm_all_tags.md`
+- Creates missing DLV variables first
+- Creates missing triggers second
+- Creates `MP - Base Pixel` on All Pages if missing
+- Creates one `Meta - EventName` custom HTML tag per event
+- Skips existing items so it is safe to re-run
+- Excludes obvious PII fields from Meta event payloads and reports what was skipped
+
+---
+
 ### `setup.js` — Example setup for a fixed event set
 
 Creates variables, triggers, GA4 tags for a small hard-coded event set, plus the Meta base pixel tag. Use it as a reference script or a quick bootstrap for those sample events.
@@ -79,6 +111,27 @@ Creates variables, triggers, GA4 tags for a small hard-coded event set, plus the
 ```bash
 node setup.js
 ```
+
+### `setup-google-ads.js` — Example Google Ads setup for a fixed event set
+
+Uses existing GTM custom event triggers for the configured events, creates a Conversion Linker tag on All Pages, and creates one Google Ads conversion tag per event based on `GOOGLE_ADS_CONVERSION_LABELS`.
+
+```bash
+node setup-google-ads.js
+
+# Using npm script
+npm run setup:google-ads
+```
+
+`GOOGLE_ADS_CONVERSION_LABELS` is a comma-separated event-to-label map:
+
+```bash
+GOOGLE_ADS_CONVERSION_LABELS=ATB_PDP_Clicked:AbCdEf123,Wishlist_Clicked:ZyXwVu456
+```
+
+This is separate from GA4 because Google Ads needs a unique conversion label for each conversion action.
+
+If a configured event does not already have a GTM custom event trigger, the script exits with an error instead of creating one.
 
 ---
 
@@ -125,7 +178,7 @@ The script skips variables that already exist.
 
 ## `gtm_all_tags.md` — Event definitions input file
 
-This is the input file for `create-tag.js`. Fill it in with your project's event definitions before running the bulk script.
+This is the input file for the bulk tag scripts. Fill it in with your project's event definitions before running `create-tag.js` or `create-meta-tag.js`.
 
 **Format:**
 
@@ -148,13 +201,16 @@ cp .env.example .env
 
 # 3. Fill in gtm_all_tags.md with project events
 
-# 4. Dry run to verify
+# 4. Dry run to verify GA4
 DRY_RUN=true node create-tag.js
 
-# 5. Apply
+# 5. Apply GA4
 node create-tag.js
 
-# 6. Publish
+# 6. Apply Meta (optional)
+node create-meta-tag.js
+
+# 7. Publish
 node publish.js "Project name - initial setup"
 ```
 

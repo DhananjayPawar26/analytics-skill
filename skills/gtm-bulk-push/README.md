@@ -16,6 +16,8 @@ This repository contains the `gtm-bulk-push` skill under `skills/gtm-bulk-push` 
 - Configuring the `.env` file
 - Filling in `gtm_all_tags.md` with event definitions
 - Running `create-tag.js` to bulk-create DLV variables, triggers, and GA4 tags
+- Running `create-meta-tag.js` to bulk-create Meta Pixel base and event tags from the same event spec
+- Running `setup-google-ads.js` to create a conversion linker and Google Ads conversion tags for selected events
 - Publishing the container via script
 - Troubleshooting common script errors
 
@@ -28,7 +30,9 @@ Reference docs:
 | Script                | Purpose                                                                  |
 | --------------------- | ------------------------------------------------------------------------ |
 | `create-tag.js`       | Bulk create DLV variables, triggers, and GA4 tags from `gtm_all_tags.md` |
+| `create-meta-tag.js`  | Bulk create DLV variables, triggers, Meta base pixel, and Meta event tags from `gtm_all_tags.md` |
 | `setup.js`            | Example setup for a fixed event set: variables, triggers, GA4 tags, and the Meta base pixel |
+| `setup-google-ads.js` | Example setup for a fixed event set: conversion linker and Google Ads conversion tags |
 | `publish.js`          | Create a container version and publish to live                           |
 | `create-trigger.js`   | Utility: create a single trigger by event name                           |
 | `create-variables.js` | Utility: create a list of DLV variables                                  |
@@ -43,8 +47,14 @@ cp .env.example .env
 # Always dry run first
 DRY_RUN=true node create-tag.js
 
-# Apply
+# Apply GA4
 node create-tag.js
+
+# Apply Meta
+node create-meta-tag.js
+
+# Apply Google Ads example setup
+node setup-google-ads.js
 
 # Publish
 node publish.js

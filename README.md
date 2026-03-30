@@ -48,7 +48,7 @@ skills/
 │       ├── 01-prerequisites.md       — IDs, Google Cloud, service account, naming conventions
 │       ├── 02-events-planning.md     — Client Excel parsing, ambiguity flags, gtm_all_tags.md format
 │       ├── 03-gtm-setup-manual.md    — GTM dashboard: DLVs, triggers, SDK loaders, event tags
-│       ├── 03-gtm-setup-scripts.md   — Bulk script usage and how create-tag.js works
+│       ├── 03-gtm-setup-scripts.md   — Bulk script usage and how the GTM automation scripts work
 │       ├── 04-website-integration.md — GTM snippet, pushEvent utility, event file structure
 │       ├── 05-testing-debugging.md   — Testing flow, debug decision tree, console commands
 │       ├── 06-publishing.md          — Publish steps, UAT vs production strategy
@@ -67,10 +67,13 @@ scripts/gtm/
 ├── .gitignore
 ├── README.md                         — script-level setup and workflow
 ├── create-tag.js                     — Bulk create DLVs, triggers, and GA4 tags from gtm_all_tags.md
+├── create-meta-tag.js                — Bulk create DLVs, triggers, Meta base pixel, and Meta tags from gtm_all_tags.md
 ├── setup.js                          — Example setup: variables, triggers, GA4 tags, and Meta base pixel
+├── setup-google-ads.js               — Example setup: conversion linker and Google Ads conversion tags
 ├── publish.js                        — Create version and publish GTM container
 ├── create-trigger.js                 — Utility: create a single trigger
 ├── create-variables.js               — Utility: create DLV variables
+├── package-lock.json
 └── gtm_all_tags.md                   — Input file: event definitions (fill this in per project)
 ```
 
