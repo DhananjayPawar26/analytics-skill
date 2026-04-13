@@ -14,7 +14,8 @@ scripts/gtm/
 ├── .gitignore
 ├── package.json
 ├── gtm_all_tags.md         — input: event definitions
-├── create-tag.js           — bulk creates from gtm_all_tags.md
+├── create-shared-gtm-assets.js — bulk creates shared DLVs and triggers
+├── create-ga4-tag.js       — bulk creates GA4 tags from gtm_all_tags.md
 ├── setup.js                — full single-event setup
 ├── publish.js              — creates version and publishes
 ├── create-trigger.js       — utility: one trigger
@@ -47,21 +48,35 @@ Place your service account JSON in the same folder as `service-account.json`.
 
 ## Running the scripts
 
-### Always dry run first
+### Always dry run shared assets first
 
 ```bash
-DRY_RUN=true node create-tag.js
+DRY_RUN=true node create-shared-gtm-assets.js
 ```
 
-Shows everything that will be created without writing anything. Review the output before applying.
+Shows which shared DLVs and triggers would be created without writing anything.
 
-### Apply
+### Apply shared assets
 
 ```bash
-node create-tag.js
+node create-shared-gtm-assets.js
 ```
 
-Creates all missing DLVs → triggers → GA4 tags in that order. Skips items that already exist — safe to re-run.
+Creates all missing DLVs and triggers. Platform scripts depend on this step.
+
+### Dry run GA4 tags
+
+```bash
+DRY_RUN=true node create-ga4-tag.js
+```
+
+### Apply GA4 tags
+
+```bash
+node create-ga4-tag.js
+```
+
+Creates missing GA4 tags only. Shared DLVs and triggers must already exist.
 
 ### Publish
 
@@ -74,6 +89,8 @@ node publish.js "Phase 1 - PDP events" "Added ATB, Wishlist, tab events"
 ### npm shortcuts
 
 ```bash
+npm run create-shared:dry
+npm run create-shared
 npm run create-tags:dry
 npm run create-tags
 npm run publish
@@ -81,24 +98,37 @@ npm run publish
 
 ---
 
-## How `create-tag.js` works
+## How the separated scripts work
 
-1. Reads all `clevertap.event.push("EventName", {...})` blocks from `gtm_all_tags.md`
-2. Extracts event names and `{{DLV - key}}` properties from each block
-3. Handles `Apply to:` and `Duplicate for:` annotations to clone property shapes
-4. Fetches existing variables, triggers, and tags from GTM API
-5. Creates missing DLV variables first (dependency order)
-6. Creates missing triggers second
-7. Creates GA4 event tags last, linked to the correct trigger ID
-8. Skips anything that already exists
-9. Warns if any event exceeds GA4's 25-parameter limit
-10. Warns if any properties may contain PII
+1. `create-shared-gtm-assets.js` reads all events and creates missing DLVs and triggers
+2. `create-ga4-tag.js` creates only GA4 tags
+3. `create-clevertap-tag.js` creates only CleverTap tags
+4. `create-meta-tag.js` creates only Meta tags
+5. Platform scripts fail fast if shared DLVs or triggers are missing
 
 ---
 
-## Adding CleverTap and Clarity tags via script
+## Adding CleverTap tags via script
 
-The script creates GA4 tags automatically from `gtm_all_tags.md`. For CleverTap and Clarity Custom HTML tags, follow the Meta Pixel pattern in `setup.js`:
+Use `create-clevertap-tag.js` to create CleverTap event tags from the same `gtm_all_tags.md` input:
+
+```bash
+DRY_RUN=true node create-clevertap-tag.js
+node create-clevertap-tag.js
+```
+
+It:
+
+- creates missing DLV variables
+- creates missing custom-event triggers
+- creates one `CT - EventName` Custom HTML tag per event
+- skips existing items so it is safe to re-run
+
+The generated tag HTML uses the same `clevertap.event.push("EventName", {...})` body already defined in the markdown spec.
+
+## Adding Clarity tags via script
+
+For Clarity Custom HTML tags, follow the Meta Pixel pattern in `setup.js`:
 
 - Tag type: `"html"`
 - Parameter key: `"html"` with the SDK event push as the value

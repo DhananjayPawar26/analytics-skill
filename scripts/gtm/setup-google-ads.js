@@ -74,7 +74,9 @@ function findTrigger(triggers, eventName) {
       .flatMap(filter => filter.parameter || [])
       .find(param => param.key === "arg1");
 
-    return eventParam?.value === eventName || trigger.name === `CE - ${eventName}`;
+    return eventParam?.value === eventName
+      || trigger.name === `Trigger - ${eventName}`
+      || trigger.name === `CE - ${eventName}`;
   });
 }
 
@@ -137,7 +139,7 @@ async function main() {
     }
 
     triggerIds.set(eventName, existing.triggerId);
-    console.log(`  [found] CE - ${eventName} (ID: ${existing.triggerId})`);
+    console.log(`  [found] Trigger - ${eventName} (ID: ${existing.triggerId})`);
   }
 
   console.log("\n── Tags ──");

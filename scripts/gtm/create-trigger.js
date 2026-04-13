@@ -33,7 +33,7 @@ async function main() {
   const { data: trigger } = await gtm.accounts.containers.workspaces.triggers.create({
     parent: ws.path,
     requestBody: {
-      name: `CE - ${EVENT_NAME}`,
+      name: `Trigger - ${EVENT_NAME}`,
       type: "customEvent",
       customEventFilter: [{ type: "equals", parameter: [
         { type: "template", key: "arg0", value: "{{_event}}" },

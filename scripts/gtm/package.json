@@ -6,8 +6,12 @@
   "scripts": {
     "setup": "node setup.js",
     "setup:google-ads": "node setup-google-ads.js",
-    "create-tags": "node create-tag.js",
-    "create-tags:dry": "DRY_RUN=true node create-tag.js",
+    "create-shared": "node create-shared-gtm-assets.js",
+    "create-shared:dry": "DRY_RUN=true node create-shared-gtm-assets.js",
+    "create-tags": "node create-ga4-tag.js",
+    "create-tags:dry": "DRY_RUN=true node create-ga4-tag.js",
+    "create-tags:ct": "node create-clevertap-tag.js",
+    "create-tags:ct:dry": "DRY_RUN=true node create-clevertap-tag.js",
     "create-tags:meta": "node create-meta-tag.js",
     "create-tags:meta:dry": "DRY_RUN=true node create-meta-tag.js",
     "publish": "node publish.js"

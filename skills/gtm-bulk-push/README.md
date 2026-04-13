@@ -15,7 +15,9 @@ This repository contains the `gtm-bulk-push` skill under `skills/gtm-bulk-push` 
 - Setting up Google Cloud credentials and service account
 - Configuring the `.env` file
 - Filling in `gtm_all_tags.md` with event definitions
-- Running `create-tag.js` to bulk-create DLV variables, triggers, and GA4 tags
+- Running `create-shared-gtm-assets.js` to bulk-create shared DLV variables and triggers
+- Running `create-ga4-tag.js` to bulk-create GA4 tags
+- Running `create-clevertap-tag.js` to bulk-create CleverTap Custom HTML event tags from the same event spec
 - Running `create-meta-tag.js` to bulk-create Meta Pixel base and event tags from the same event spec
 - Running `setup-google-ads.js` to create a conversion linker and Google Ads conversion tags for selected events
 - Publishing the container via script
@@ -29,8 +31,10 @@ Reference docs:
 
 | Script                | Purpose                                                                  |
 | --------------------- | ------------------------------------------------------------------------ |
-| `create-tag.js`       | Bulk create DLV variables, triggers, and GA4 tags from `gtm_all_tags.md` |
-| `create-meta-tag.js`  | Bulk create DLV variables, triggers, Meta base pixel, and Meta event tags from `gtm_all_tags.md` |
+| `create-shared-gtm-assets.js` | Bulk create shared DLV variables and triggers from `gtm_all_tags.md` |
+| `create-ga4-tag.js`   | Bulk create GA4 tags from `gtm_all_tags.md` |
+| `create-clevertap-tag.js` | Bulk create CleverTap Custom HTML tags from `gtm_all_tags.md` |
+| `create-meta-tag.js`  | Bulk create Meta base pixel and Meta event tags from `gtm_all_tags.md` |
 | `setup.js`            | Example setup for a fixed event set: variables, triggers, GA4 tags, and the Meta base pixel |
 | `setup-google-ads.js` | Example setup for a fixed event set: conversion linker and Google Ads conversion tags |
 | `publish.js`          | Create a container version and publish to live                           |
@@ -44,13 +48,18 @@ cd scripts/gtm
 npm install
 cp .env.example .env
 
-# Always dry run first
-DRY_RUN=true node create-tag.js
+# Shared GTM assets first
+DRY_RUN=true node create-shared-gtm-assets.js
+node create-shared-gtm-assets.js
 
-# Apply GA4
-node create-tag.js
+# Then platform tags
+DRY_RUN=true node create-ga4-tag.js
+node create-ga4-tag.js
 
-# Apply Meta
+DRY_RUN=true node create-clevertap-tag.js
+node create-clevertap-tag.js
+
+DRY_RUN=true node create-meta-tag.js
 node create-meta-tag.js
 
 # Apply Google Ads example setup

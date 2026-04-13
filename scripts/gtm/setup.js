@@ -2,7 +2,8 @@
  * GTM Full Setup — variables + triggers + GA4 tag + Meta Pixel tags
  *
  * Use this for quick single-event setup or as a starting point.
- * For bulk setup from gtm_all_tags.md, use create-tag.js instead.
+ * For bulk setup from gtm_all_tags.md, use create-shared-gtm-assets.js
+ * and the platform-specific scripts instead.
  *
  * Usage:
  *   node setup.js
@@ -80,8 +81,8 @@ async function main() {
   // ── Triggers ─────────────────────────────────────────────
   console.log("\n── Triggers ──");
   const triggerDefs = [
-    { name: "CE - ATB_PDP_Clicked", eventName: "ATB_PDP_Clicked" },
-    { name: "CE - Wishlist_Clicked", eventName: "Wishlist_Clicked" },
+    { name: "Trigger - ATB_PDP_Clicked", eventName: "ATB_PDP_Clicked" },
+    { name: "Trigger - Wishlist_Clicked", eventName: "Wishlist_Clicked" },
   ];
 
   const triggerIds = {};

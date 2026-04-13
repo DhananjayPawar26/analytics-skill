@@ -46,7 +46,7 @@ Create one GA4 Configuration tag that fires on All Pages:
 
 ## Event Tag (via script)
 
-The `create-tag.js` script automatically normalises property labels to snake_case parameter names:
+The `create-ga4-tag.js` script automatically normalises property labels to snake_case parameter names:
 
 ```js
 // "Product Name" → "product_name"
@@ -65,7 +65,7 @@ The `create-tag.js` script automatically normalises property labels to snake_cas
 | Parameter value length      | 100 characters |
 | User properties per event   | 25             |
 
-> The `create-tag.js` script warns automatically if any event exceeds 25 parameters.
+> The `create-ga4-tag.js` script warns automatically if any event exceeds 25 parameters.
 
 ---
 
@@ -78,7 +78,7 @@ GA4 must not receive PII (personally identifiable information). Never send:
 - Phone number
 - Precise location
 
-> The `create-tag.js` script warns if any properties appear to contain PII (name, email, phone, address).
+> The `create-ga4-tag.js` script warns if any properties appear to contain PII (name, email, phone, address).
 
 ---
 

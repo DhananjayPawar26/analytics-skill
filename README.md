@@ -66,8 +66,10 @@ scripts/gtm/
 ├── .env.example
 ├── .gitignore
 ├── README.md                         — script-level setup and workflow
-├── create-tag.js                     — Bulk create DLVs, triggers, and GA4 tags from gtm_all_tags.md
-├── create-meta-tag.js                — Bulk create DLVs, triggers, Meta base pixel, and Meta tags from gtm_all_tags.md
+├── create-shared-gtm-assets.js       — Bulk create shared DLVs and triggers from gtm_all_tags.md
+├── create-ga4-tag.js                 — Bulk create GA4 tags from gtm_all_tags.md
+├── create-clevertap-tag.js           — Bulk create CleverTap Custom HTML tags from gtm_all_tags.md
+├── create-meta-tag.js                — Bulk create Meta base pixel and Meta tags from gtm_all_tags.md
 ├── setup.js                          — Example setup: variables, triggers, GA4 tags, and Meta base pixel
 ├── setup-google-ads.js               — Example setup: conversion linker and Google Ads conversion tags
 ├── publish.js                        — Create version and publish GTM container
